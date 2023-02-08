@@ -1,16 +1,20 @@
 package com.example.makalu.domain;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.PrePersist;
 import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Entity
 @Table(name = "tb_user")
@@ -34,6 +38,12 @@ public class User implements Serializable {
     private Instant createdAt;
     @Column(columnDefinition = "TIMESTAMP WITHOUT TIME ZONE")
     private Instant updatedAt;
+
+    @OneToMany(mappedBy = "owner")
+    private Set<Project> projects = new HashSet<>();
+
+    @OneToMany(mappedBy = "id.user", cascade = CascadeType.ALL)
+    private Set<Participant> participants = new HashSet<>();
 
     public User() {
     }
@@ -106,6 +116,14 @@ public class User implements Serializable {
 
     public Instant getUpdatedAt() {
         return updatedAt;
+    }
+
+    public Set<Project> getProjects() {
+        return projects;
+    }
+
+    public Set<Participant> getParticipants() {
+        return participants;
     }
 
     @Override
