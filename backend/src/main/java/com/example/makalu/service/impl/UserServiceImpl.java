@@ -34,8 +34,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse update(Long id,
-                               UserUpdatePayload payload) {
+    public UserResponse update(Long id, UserUpdatePayload payload) {
         // TODO: encrypt password with bcrypt
         try {
             User user = userRepository.getReferenceById(id);
