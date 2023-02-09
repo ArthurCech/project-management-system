@@ -52,12 +52,16 @@ public class User implements Serializable {
                 String firstName,
                 String lastName,
                 String email,
-                String password) {
+                String password,
+                Instant createdAt,
+                Instant updatedAt) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
     }
 
     @PrePersist

@@ -61,7 +61,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectResponse update(Long id, ProjectPayload payload) {
+    public ProjectResponse update(Long id,
+                                  ProjectPayload payload) {
         try {
             Project project = projectRepository.getReferenceById(id);
             ProjectMapper.INSTANCE.updateProjectFromDto(payload, project);
@@ -74,7 +75,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ProjectResponse changeStatus(Long id, StatusPayload payload) {
+    public ProjectResponse changeStatus(Long id,
+                                        StatusPayload payload) {
         try {
             Project project = projectRepository.getReferenceById(id);
             project.setStatus(payload.status());
@@ -87,7 +89,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     @Transactional
-    public ParticipantsResponse addParticipant(Long id, ParticipantsPayload payload) {
+    public ParticipantsResponse addParticipant(Long id,
+                                               ParticipantsPayload payload) {
         try {
             Project project = projectRepository.getReferenceById(id);
             List<Participant> participantsToBeSaved = payload.participants().stream()
@@ -102,14 +105,15 @@ public class ProjectServiceImpl implements ProjectService {
                     .map(ParticipantMapper.INSTANCE::toParticipantResponse)
                     .toList();
             return new ParticipantsResponse(project.getId(), project.getName(), project.getDescription(),
-                    project.getStartDate(), project.getDeadline(), project.getStatus(), participantsList);
+                    project.getStatus(), participantsList);
         } catch (EntityNotFoundException e) {
             throw new DomainNotFoundException("Project not found");
         }
     }
 
     @Override
-    public void deleteParticipant(Long id, DeleteParticipantPayload payload) {
+    public void deleteParticipant(Long id,
+                                  DeleteParticipantPayload payload) {
         try {
             User user = userRepository.getReferenceById(payload.id());
             Project project = projectRepository.getReferenceById(id);

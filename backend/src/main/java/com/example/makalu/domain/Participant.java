@@ -14,6 +14,7 @@ import java.util.Objects;
 
 @Entity
 @Table(name = "tb_participant")
+// TODO: add createdAt and updatedAt
 public class Participant implements Serializable {
 
     private static final long serialVersionUID = 1L;

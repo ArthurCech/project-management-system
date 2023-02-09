@@ -5,16 +5,12 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import java.time.Instant;
-import java.time.LocalDate;
 
-@JsonPropertyOrder({"id", "name", "description", "startDate", "deadline",
-        "status", "progress", "createdAt", "updatedAt"})
+@JsonPropertyOrder({"id", "name", "description", "status", "progress", "createdAt", "updatedAt"})
 public record ProjectResponse(
         Long id,
         String name,
         String description,
-        @JsonProperty("start_date") LocalDate startDate,
-        LocalDate deadline,
         Status status,
         Integer progress,
         @JsonProperty("created_at") Instant createdAt,

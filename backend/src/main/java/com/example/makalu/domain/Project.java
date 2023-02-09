@@ -18,7 +18,6 @@ import javax.persistence.PreUpdate;
 import javax.persistence.Table;
 import java.io.Serializable;
 import java.time.Instant;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -31,16 +30,12 @@ public class Project implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private Long id;
     @Column(nullable = false)
     private String name;
     @Column(columnDefinition = "TEXT")
     private String description;
-    @Column(nullable = false)
-    private LocalDate startDate;
-    @Column(nullable = false)
-    private LocalDate deadline;
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Status status;
@@ -58,27 +53,28 @@ public class Project implements Serializable {
     @OneToMany(mappedBy = "id.project", cascade = CascadeType.ALL)
     private Set<Participant> participants = new HashSet<>();
 
+    @OneToMany(mappedBy = "project")
+    private Set<Sprint> sprints = new HashSet<>();
+
     public Project() {
     }
 
     public Project(Long id,
                    String name,
                    String description,
-                   LocalDate startDate,
-                   LocalDate deadline,
                    Status status,
                    Integer progress,
                    Instant createdAt,
-                   Instant updatedAt) {
+                   Instant updatedAt,
+                   User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
-        this.startDate = startDate;
-        this.deadline = deadline;
         this.status = status;
         this.progress = progress;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
+        this.owner = owner;
     }
 
     @PrePersist
@@ -115,22 +111,6 @@ public class Project implements Serializable {
         this.description = description;
     }
 
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getDeadline() {
-        return deadline;
-    }
-
-    public void setDeadline(LocalDate deadline) {
-        this.deadline = deadline;
-    }
-
     public Status getStatus() {
         return status;
     }
@@ -165,6 +145,10 @@ public class Project implements Serializable {
 
     public Set<Participant> getParticipants() {
         return participants;
+    }
+
+    public Set<Sprint> getSprints() {
+        return sprints;
     }
 
     @Override
