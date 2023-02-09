@@ -8,9 +8,12 @@ import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 public record ParticipantPayload(
-        @NotBlank @Email String email,
-        @NotNull ProjectRole role
+        @NotBlank @Email
+        String email,
+        @NotNull
+        ProjectRole role
 ) {
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -23,4 +26,5 @@ public record ParticipantPayload(
     public int hashCode() {
         return Objects.hash(email);
     }
+
 }
