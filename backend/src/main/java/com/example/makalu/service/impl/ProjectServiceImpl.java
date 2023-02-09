@@ -1,12 +1,18 @@
 package com.example.makalu.service.impl;
 
+import com.example.makalu.domain.Participant;
 import com.example.makalu.domain.Project;
 import com.example.makalu.domain.User;
 import com.example.makalu.domain.enums.Status;
+import com.example.makalu.dto.participant.ParticipantResponse;
+import com.example.makalu.dto.participant.ParticipantsPayload;
+import com.example.makalu.dto.participant.ParticipantsResponse;
 import com.example.makalu.dto.project.ProjectPayload;
 import com.example.makalu.dto.project.ProjectResponse;
 import com.example.makalu.dto.project.StatusPayload;
+import com.example.makalu.mapper.ParticipantMapper;
 import com.example.makalu.mapper.ProjectMapper;
+import com.example.makalu.repository.ParticipantRepository;
 import com.example.makalu.repository.ProjectRepository;
 import com.example.makalu.repository.UserRepository;
 import com.example.makalu.service.ProjectService;
@@ -16,17 +22,21 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.List;
 
 @Service
 public class ProjectServiceImpl implements ProjectService {
 
     private final ProjectRepository projectRepository;
     private final UserRepository userRepository;
+    private final ParticipantRepository participantRepository;
 
     public ProjectServiceImpl(ProjectRepository projectRepository,
-                              UserRepository userRepository) {
+                              UserRepository userRepository,
+                              ParticipantRepository participantRepository) {
         this.projectRepository = projectRepository;
         this.userRepository = userRepository;
+        this.participantRepository = participantRepository;
     }
 
     @Override
@@ -67,6 +77,29 @@ public class ProjectServiceImpl implements ProjectService {
             project.setStatus(payload.status());
             Project updatedProject = projectRepository.save(project);
             return ProjectMapper.INSTANCE.toProjectResponse(updatedProject);
+        } catch (EntityNotFoundException e) {
+            throw new DomainNotFoundException("Project not found");
+        }
+    }
+
+    @Override
+    @Transactional
+    public ParticipantsResponse addParticipant(Long id, ParticipantsPayload payload) {
+        try {
+            Project project = projectRepository.getReferenceById(id);
+            List<Participant> participantsToBeSaved = payload.participants().stream()
+                    .map(participantPayload -> {
+                        User user = userRepository.findByEmail(participantPayload.email())
+                                .orElseThrow(() -> new DomainNotFoundException("User not found"));
+                        return new Participant(user, project, participantPayload.role());
+                    })
+                    .toList();
+            List<Participant> savedParticipants = participantRepository.saveAll(participantsToBeSaved);
+            List<ParticipantResponse> participantsList = savedParticipants.stream()
+                    .map(ParticipantMapper.INSTANCE::toParticipantResponse)
+                    .toList();
+            return new ParticipantsResponse(project.getId(), project.getName(), project.getDescription(),
+                    project.getStartDate(), project.getDeadline(), project.getStatus(), participantsList);
         } catch (EntityNotFoundException e) {
             throw new DomainNotFoundException("Project not found");
         }

@@ -1,5 +1,7 @@
 package com.example.makalu.controller;
 
+import com.example.makalu.dto.participant.ParticipantsPayload;
+import com.example.makalu.dto.participant.ParticipantsResponse;
 import com.example.makalu.dto.project.ProjectPayload;
 import com.example.makalu.dto.project.ProjectResponse;
 import com.example.makalu.dto.project.StatusPayload;
@@ -46,6 +48,13 @@ public class ProjectController {
     public ResponseEntity<ProjectResponse> changeStatus(@PathVariable Long id,
                                                         @RequestBody @Valid StatusPayload payload) {
         ProjectResponse response = projectService.changeStatus(id, payload);
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{id}/participants")
+    public ResponseEntity<ParticipantsResponse> addParticipant(@PathVariable Long id,
+                                                               @RequestBody @Valid ParticipantsPayload payload) {
+        ParticipantsResponse response = projectService.addParticipant(id, payload);
         return ResponseEntity.ok(response);
     }
 
