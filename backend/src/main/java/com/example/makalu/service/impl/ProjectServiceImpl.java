@@ -137,7 +137,7 @@ public class ProjectServiceImpl implements ProjectService {
             sprintToBeCreated.setStatus(Status.NOT_STARTED);
             sprintToBeCreated.setProgress(0);
             Sprint createdSprint = sprintRepository.save(sprintToBeCreated);
-            return SprintMapper.INSTANCE.toSprintGetRequestBody(createdSprint);
+            return SprintMapper.INSTANCE.toSprintResponse(createdSprint);
         } catch (DataAccessException e) {
             throw new DomainNotFoundException("Project not found");
         }

@@ -4,6 +4,7 @@ import com.example.makalu.domain.Sprint;
 import com.example.makalu.dto.sprint.SprintPayload;
 import com.example.makalu.dto.sprint.SprintResponse;
 import org.mapstruct.Mapper;
+import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -13,6 +14,8 @@ public interface SprintMapper {
 
     Sprint toSprint(SprintPayload payload);
 
-    SprintResponse toSprintGetRequestBody(Sprint sprint);
+    SprintResponse toSprintResponse(Sprint sprint);
+
+    void updateSprintFromDto(SprintPayload payload, @MappingTarget Sprint sprint);
 
 }
