@@ -4,6 +4,8 @@ import com.example.makalu.domain.Participant;
 import com.example.makalu.domain.Project;
 import com.example.makalu.domain.User;
 import com.example.makalu.domain.enums.Status;
+import com.example.makalu.domain.pk.ParticipantPK;
+import com.example.makalu.dto.participant.DeleteParticipantPayload;
 import com.example.makalu.dto.participant.ParticipantResponse;
 import com.example.makalu.dto.participant.ParticipantsPayload;
 import com.example.makalu.dto.participant.ParticipantsResponse;
@@ -18,6 +20,7 @@ import com.example.makalu.repository.UserRepository;
 import com.example.makalu.service.ProjectService;
 import com.example.makalu.service.exception.DomainNotFoundException;
 import org.springframework.dao.DataAccessException;
+import org.springframework.orm.jpa.JpaSystemException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -102,6 +105,17 @@ public class ProjectServiceImpl implements ProjectService {
                     project.getStartDate(), project.getDeadline(), project.getStatus(), participantsList);
         } catch (EntityNotFoundException e) {
             throw new DomainNotFoundException("Project not found");
+        }
+    }
+
+    @Override
+    public void deleteParticipant(Long id, DeleteParticipantPayload payload) {
+        try {
+            User user = userRepository.getReferenceById(payload.id());
+            Project project = projectRepository.getReferenceById(id);
+            participantRepository.deleteById(new ParticipantPK(user, project));
+        } catch (JpaSystemException e) {
+            throw new DomainNotFoundException("User or project invalid");
         }
     }
 

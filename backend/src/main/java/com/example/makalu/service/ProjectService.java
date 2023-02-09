@@ -1,5 +1,6 @@
 package com.example.makalu.service;
 
+import com.example.makalu.dto.participant.DeleteParticipantPayload;
 import com.example.makalu.dto.participant.ParticipantsPayload;
 import com.example.makalu.dto.participant.ParticipantsResponse;
 import com.example.makalu.dto.project.ProjectPayload;
@@ -15,5 +16,7 @@ public interface ProjectService {
     ProjectResponse changeStatus(Long id, StatusPayload payload);
 
     ParticipantsResponse addParticipant(Long id, ParticipantsPayload payload);
+
+    void deleteParticipant(Long id, DeleteParticipantPayload payload);
 
 }
