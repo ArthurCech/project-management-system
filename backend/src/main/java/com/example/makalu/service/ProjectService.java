@@ -6,6 +6,8 @@ import com.example.makalu.dto.participant.ParticipantsResponse;
 import com.example.makalu.dto.project.ProjectPayload;
 import com.example.makalu.dto.project.ProjectResponse;
 import com.example.makalu.dto.project.StatusPayload;
+import com.example.makalu.dto.sprint.SprintPayload;
+import com.example.makalu.dto.sprint.SprintResponse;
 
 public interface ProjectService {
 
@@ -18,5 +20,7 @@ public interface ProjectService {
     ParticipantsResponse addParticipant(Long id, ParticipantsPayload payload);
 
     void deleteParticipant(Long id, DeleteParticipantPayload payload);
+
+    SprintResponse addSprintToProject(Long id, SprintPayload payload);
 
 }

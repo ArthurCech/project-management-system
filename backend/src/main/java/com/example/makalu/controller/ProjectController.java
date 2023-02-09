@@ -1,12 +1,13 @@
 package com.example.makalu.controller;
 
 import com.example.makalu.dto.participant.DeleteParticipantPayload;
-import com.example.makalu.dto.participant.ParticipantPayload;
 import com.example.makalu.dto.participant.ParticipantsPayload;
 import com.example.makalu.dto.participant.ParticipantsResponse;
 import com.example.makalu.dto.project.ProjectPayload;
 import com.example.makalu.dto.project.ProjectResponse;
 import com.example.makalu.dto.project.StatusPayload;
+import com.example.makalu.dto.sprint.SprintPayload;
+import com.example.makalu.dto.sprint.SprintResponse;
 import com.example.makalu.service.ProjectService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -66,6 +67,15 @@ public class ProjectController {
                                                   @RequestBody @Valid DeleteParticipantPayload payload) {
         projectService.deleteParticipant(id, payload);
         return ResponseEntity.noContent().build();
+    }
+
+    @PostMapping("/{id}/sprints")
+    public ResponseEntity<SprintResponse> addSprintToProject(@PathVariable Long id,
+                                                             @RequestBody @Valid SprintPayload payload) {
+        SprintResponse responseBody = projectService.addSprintToProject(id, payload);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest()
+                .path("/{id}").buildAndExpand(responseBody.id()).toUri();
+        return ResponseEntity.created(uri).body(responseBody);
     }
 
 }
